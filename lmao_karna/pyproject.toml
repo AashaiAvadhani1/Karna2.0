@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "chat-with-doc"
+version = "0.1.0"
+description = "A Mini RAG application to have conversation with PDFs"
+authors = ["Sadman Kabir Soumik"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+streamlit = "^1.30.0"
+python-dotenv = "^1.0.0"
+google-generativeai = "^0.3.2"
+langchain = "^0.1.1"
+pypdf2 = "^3.0.1"
+chromadb = "^0.4.22"
+faiss-cpu = "^1.7.4"
+langchain-google-genai = "^0.0.6"
+black = "^23.12.1"
+isort = "^5.13.2"
+datasets = "^2.16.1"
+ragas = "^0.0.22"
+
+
+[tool.poetry.group.dev.dependencies]
+ipykernel = "^6.29.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
