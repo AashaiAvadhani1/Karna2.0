@@ -1,5 +1,5 @@
 #### RAG pipeline using LangChain, Gemini pro, Faiss
-This is a simple RAG pipeline that can talk with PDF files and Web pages. The pipeline has been deployed using Streamlit. 
+This is Karna, the first every automated Privacy Risk Assessment Tool that reads code and understands privacy risks to your company. 
 
 ![Streamlit UI](static/rag_UI.png)
 
