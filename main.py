@@ -8,6 +8,7 @@ import google.generativeai as genai
 from src.user_interface import user_input
 from src.vector_store import *
 from src.code_compliance import *
+import fitz  # PyMuPDF for PDF processing
 
 import time as time
 
@@ -35,6 +36,18 @@ past_chats = load_past_chats()
 def get_text_chunks(text, chunk_size=1000):
     return [text[i:i+chunk_size] for i in range(0, len(text), chunk_size)]
 
+# Function to save chunks to a file
+def save_chunks(chunks, chunk_file):
+    joblib.dump(chunks, chunk_file)
+
+# Function to extract text from a PDF file
+def extract_text_from_pdf(pdf_file):
+    doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
+    text = ""
+    for page in doc:
+        text += page.get_text()
+    return text
+
 # Function for the questionnaire page
 def questionnaire():
     st.title("Code Compliance Onboarding Questionnaire")
@@ -45,6 +58,16 @@ def questionnaire():
     code_complexity = st.selectbox("Code Complexity", ["Simple", "Moderate", "Complex"])
     additional_notes = st.text_area("Additional Notes:")
 
+    uploaded_file = st.file_uploader("Upload your PDF file", type=["pdf"])
+    if uploaded_file is not None:
+        with st.spinner("Processing PDF..."):
+            text = extract_text_from_pdf(uploaded_file)
+            st.text_area("Extracted Text", value=text, height=300)
+            # Process the text if needed, e.g., save to a file, analyze, etc.
+            chunks = get_text_chunks(text)
+            save_chunks(chunks, os.path.join(DATA_DIR, 'pdf_document_chunks.pkl'))
+            st.success("PDF processed and text extracted successfully!")
+
     if st.button("Submit"):
         st.success("Questionnaire submitted successfully!")
         # Save the responses if needed
@@ -52,7 +75,8 @@ def questionnaire():
             "Company Name": company_name,
             "Project Name": project_name,
             "Code Complexity": code_complexity,
-            "Additional Notes": additional_notes
+            "Additional Notes": additional_notes,
+            "Uploaded File": uploaded_file.name if uploaded_file else None
         }
         joblib.dump(responses, os.path.join(DATA_DIR, 'questionnaire_responses.pkl'))
 
@@ -193,7 +217,11 @@ def main():
                     )
                     st.success("Code processed")
     elif page == "Questionnaire":
+        #the pickle files saved will have the information, query into the pickle file to get the responses from the user
         questionnaire()
+
+        #make the method read in the pkle file
+        check_code_compliance()
 
 if __name__ == "__main__":
     main()

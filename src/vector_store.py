@@ -22,13 +22,11 @@ client_anthropic = anthropic.Anthropic(
 )
 
 
-def get_vector_store():
-    """Creates a vector store from a list of text chunks."""
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
-    vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
-    vector_store.save_local("faiss_index")
 
-
+"""
+DEPRIORITIZE: NOT CALLED which means we have to change the system....
+Creaitng a multi turn system for past messages 
+"""
 def create_memory_chain(llm, base_chain, chat_memory):
     contextualize_q_system_prompt = """Given a chat history and the latest user question \
         which might reference context in the chat history, formulate a standalone question \
@@ -58,6 +56,9 @@ def create_memory_chain(llm, base_chain, chat_memory):
 
 
 
+"""
+Description: Gets data used from the code snippet submitted by user
+"""
 def get_data_code_anthropic(user_code):
     system_prompt = """
 Role: Lawyer Task

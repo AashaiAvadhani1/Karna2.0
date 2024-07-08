@@ -1,7 +1,6 @@
 #### RAG pipeline using LangChain, Gemini pro, Faiss
 This is Karna, the first every automated Privacy Risk Assessment Tool that reads code and understands privacy risks to your company. 
 
-![Streamlit UI](static/rag_UI.png)
 
 #### Local Installation
 Prerequisites

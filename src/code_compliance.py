@@ -22,10 +22,9 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
+import joblib
+DATA_DIR = 'data/'
 
-#from langchain.memory import ChatMessageHistory
-#from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
-#from langchain_core.runnables.history import RunnableWithMessageHistory
 
 client_anthropic = anthropic.Anthropic(
     # defaults to os.environ.get("ANTHROPIC_API_KEY")
@@ -253,14 +252,16 @@ Lets work this out in a step by step way to be sure we have the right answer.
 Sensitive Data is defined as the following data:
 demographic data, racial data, gender
 
-Insert the privacy data
+Insert the privacy data classification
+
 
 ### Steps ###
 1- Summarize the objective of the code
 2- Summarize the data's purpose within the code and how its being used
 3- Explain what type of data is used in the code whether its integers, strings etc..
 4- Identify if the data is sensitive such as demographic data, racial data, gender
-5- list out all the variables, its corresponding datatype and whether its sensitive
+5- Classify each data mentioned in the code according to the privacy classification above 
+6- list out all the variables, its corresponding datatype and whether its sensitive
 """
 
 
@@ -338,6 +339,7 @@ def get_data_requirement_documents(legislation_doc, data_from_code):
     - Financial information
     - Personal identification numbers
 
+                                              
     ### Steps ###
 
     1. **Summarize the Objective of the Legislation**: Begin by understanding and summarizing what the legislation is intended to accomplish. Is it performing data analysis, training a machine learning model, or something else?
@@ -435,9 +437,46 @@ def get_result(legal_doc_data_requirements, data_code):
     print("Anthropic result",compliance_assessment)
     return compliance_assessment[0].text
 
+
+"""
+Loading in the questionnaire responses from the pickle file
+"""
+def load_questionnaire_responses():
+    try:
+        responses = joblib.load(os.path.join(DATA_DIR, 'questionnaire_responses.pkl'))
+        return responses
+    except FileNotFoundError:
+        return None
+
+
+"""
+Checking code compliances from pickle file from the DATA_DIR
+"""
+def check_code_compliance(user_code: str):
+    # Load the questionnaire responses
+    responses = load_questionnaire_responses()
+    
+    if not responses:
+        return "No questionnaire responses found."
+    
+    # Example usage of responses in the compliance check
+    company_name = responses.get("Company Name", "Unknown Company")
+    project_name = responses.get("Project Name", "Unknown Project")
+    
+    # Use the responses in your compliance logic
+    data_code = get_data_code_anthropic(user_code)
+    
+    # Use legal doc name from responses if applicable
+    legal_doc = responses.get("Compliance Standard", "General Data Protection Regulation")
+    legal_doc_data_requirements = get_data_requirement_documents(legal_doc, data_code)
+    
+    result_code_compliance = get_result(legal_doc_data_requirements, data_code)
+    
+    return f"Compliance check for {company_name} on project {project_name}: {result_code_compliance}"
+
+
 def check_code_compliance(user_code: str):
     
-    # get the data extracted from the code
     data_code = get_data_code_anthropic(user_code)
     # get the data requirement from the legal doc
 
