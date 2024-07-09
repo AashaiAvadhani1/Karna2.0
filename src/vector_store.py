@@ -155,7 +155,7 @@ def get_conversational_chain():
     Answer:
     """
  
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2, top_k = 10)
+    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.5, top_k = 10)
 
     prompt = PromptTemplate(
         template=prompt_template, input_variables=["context", "question"]
@@ -166,7 +166,9 @@ def get_conversational_chain():
 
 
 
-
+"""
+Re-ranking llama index and cohere part 
+"""
 
 """
 Gets called for the user input and legal vectordb

@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "chat-with-doc"
+name = "Karna2.0"
 version = "0.1.0"
-description = "A Mini RAG application to have conversation with PDFs"
-authors = ["Sadman Kabir Soumik"]
+description = "Karna, compliance chatbot with code compliance"
+authors = ["Aashai Avadhani"]
 readme = "README.md"
 
 [tool.poetry.dependencies]

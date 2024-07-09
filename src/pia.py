@@ -68,11 +68,24 @@ def get_template_PIA():
     return response["answer"]
 
 
+
+"""
+Get some fucntion calls in here per section of the PIA 
+
+Data Strategy....
+Data used....
+
+
+"""
+
+
+
+
 """
 Based on a user query, the llm system should answer the pia question
 """
 def answer_pia_questions(user_question):
-    
+
 
 
     pass
