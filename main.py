@@ -8,6 +8,7 @@ import google.generativeai as genai
 from src.user_interface import user_input
 from src.vector_store import *
 from src.code_compliance import *
+from src.pia import *
 import fitz  # PyMuPDF for PDF processing
 
 import time as time
@@ -220,8 +221,21 @@ def main():
         #the pickle files saved will have the information, query into the pickle file to get the responses from the user
         questionnaire()
 
-        #make the method read in the pkle file
-        check_code_compliance()
+        # Load responses and run compliance check if responses exist
+        responses = load_questionnaire_responses()
+        if responses:
+            compliance_report = develop_privacy_impact_assessment(
+                responses["Company Name"],
+                responses["Project Name"],
+                responses["Code Complexity"],
+                responses["Additional Notes"],
+                responses["Uploaded File"]
+            )
+            st.write("**Compliance Report:**")
+            st.markdown(compliance_report)
+        
+        #implement the privacy impact assessment legislation
+        
 
 if __name__ == "__main__":
     main()

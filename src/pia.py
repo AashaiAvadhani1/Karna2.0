@@ -69,23 +69,105 @@ def get_template_PIA():
 
 
 
+
+
 """
 Get some fucntion calls in here per section of the PIA 
 
-Data Strategy....
-Data used....
+Data  Collection (Data Classification)
 
+
+Data Subjects
+
+
+Data Usage
+
+
+Data Processing, transfers, storage
+
+
+Analytics, Profile, Automated Decision Making
+
+
+Security and logging
+
+
+Third Party Data Processing
+
+
+Individual Rights
+
+
+Marketing
 
 """
 
 
 
+"""
+Easier dev time
+This will generate a privacy impact assessment from scratch!
+"""
+def develop_privacy_impact_assessment(comp_name, proj_name, project_description, data_dictionary):
+
+
+    pass
+
+
+
+
+
 
 """
-Based on a user query, the llm system should answer the pia question
+Should return the data classified and why its classified that way
 """
-def answer_pia_questions(user_question):
+def get_data_collection_response():
+    
+
+    pass
+
+def get_data_subject_response():
+    pass
+
+def get_data_usage_response():
+    pass
+
+def get_data_process_storage_response():
+    pass
 
 
+
+"""
+Harder dev time (per function call agent category)
+Will answer a PIA question individually per query from a legal user
+"""
+def answer_pia_questions_individually(privacy_query):
+
+    #get the data from the code (should be stored as an object)
+
+
+    #per function call for each category, build the agent here 
+    #build an agent with each function calling for each category of question
+    data_collection_response = {
+            "type": "function",
+            "function": {
+                "name": "retrieve_payment_date",
+                "description": "Gets classification of data used in the model with legislation",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "merch_name": {
+                            "type": "string",
+                            "description": "Text Classification",
+                        }
+                    },
+                    "required": ["project_description, data_dictionary"],
+                },
+            },
+        }
+    
+    print(data_collection_response)
+
+    #have the mistral model here pick the function
 
     pass
