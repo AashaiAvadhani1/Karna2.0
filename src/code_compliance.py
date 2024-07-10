@@ -23,12 +23,17 @@ from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 import joblib
+from dotenv import dotenv_values
+
+
+config = dotenv_values(".env")  # config = {"USER": "foo", "EMAIL": "foo@example.org"}
+
 DATA_DIR = 'data/'
 
 
 client_anthropic = anthropic.Anthropic(
     # defaults to os.environ.get("ANTHROPIC_API_KEY")
-    api_key= "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",
+    api_key= config.get("ANTHROPIC_API_KEY"),
 )
 
 
