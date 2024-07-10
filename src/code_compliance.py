@@ -28,7 +28,7 @@ DATA_DIR = 'data/'
 
 client_anthropic = anthropic.Anthropic(
     # defaults to os.environ.get("ANTHROPIC_API_KEY")
-    api_key= "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",
+    api_key= "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",
 )
 
 
