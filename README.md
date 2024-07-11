@@ -80,7 +80,7 @@ Prerequisites
 - Poetry
 
 #### Installing Poetry
-If you haven't already installed Poetry in your machine, you can do so by following the instructions on the [official Poetry website](https://python-poetry.org/docs/).
+If you haven't already installed Poetry in your machine, you can do so by following the instructions on the [official Poetry website](https://python-poetry.org/docs/). (Or you can enter 'pip install poetry' inside terminal)
 
 ####Install Dependencies
 ```
