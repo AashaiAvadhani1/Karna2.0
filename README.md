@@ -1,5 +1,3 @@
-Copy and paste below into Readme File in Github (Need to still fill out/change some sections based on final draft of project):
-
 # Karna: A Compliance Checking Chatbot for Code Analysis
 
 ## **Table of Contents**
