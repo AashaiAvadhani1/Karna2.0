@@ -143,20 +143,21 @@ Proj_data is the information about the project
 data_from_code is the data thats used in the project from the code 
 """
 def get_data_classification_response(proj_data, data_from_code):
-    mistral_prompt = """
+    anthropic_data_classify = """
     Role: Data Classification Privacy Expert
 
     Get the data from the code and classify into sections
     <context>
     {context_code}
     <context>  
-
-
+ 
     <context>
     {proj_context}
-    <context>  
+    <context> 
+
+    For each piece of data in the context of the context_code or proj_context do the following:
     Data Classification
-        - For every data mentioned in the context determine the classification of each data as either P1,P2,P3 DATA
+        - For every data mentioned in the context_code determine the classification of the data as P2 or not
         - Example of P2 level data are
                     Names
                     Social security numbers (SSN)
@@ -165,35 +166,49 @@ def get_data_classification_response(proj_data, data_from_code):
                     Email addresses
                     Financial account details
                     Biometric data
-    - develop the P1,P2,P3 level classification for each dataset used 
 
     - whether health data was used 
+            - check in the context if any health data was used 
+            - biometric data such as x-ray images with individuals names
+            - fingerprint data  
+    
     - financial or government data used 
+        - check if any credit card data is used
+        - any billing address or shipping address
+        
     - demographic data (about a user)
-    - user account data (passwords, username, recovery questions)
+        - check if any data was used like gender, location, or anything that can identify a user back through the code system. 
+    - user account data 
+        (passwords, username, recovery questions)
 
 
     from each classification we can determine the privacy risk per
     then bring up the legislation and statute that the classification will refer t
     """
-    # Define prompt template
-    mistral_prompt = ChatPromptTemplate.from_template("""
-    Role: Lawyer Task
-    <context>
-    {context}
-    <context>                          
-    You are a lawyer tasked with evaluating the data
-                                              
 
-                                              """)
 
-    # Create a retrieval chain to answer questions
-    document_chain = create_stuff_documents_chain(model, mistral_prompt)
-    retrieval_chain = create_retrieval_chain(retriever_final, document_chain)
-    response = retrieval_chain.invoke({"project_context": proj_data, "context_code" : data_from_code})
-    return response["answer"]
+    message = client_anthropic.messages.create(
+        model="claude-3-opus-20240229",
+        max_tokens=4096,
+        temperature=0.2,
+        system= anthropic_data_classify,
+        messages=[
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "type": "text",
+                        "text": "Project Data: " + proj_data + " Code in data: " + data_from_code
+                    }
+                ]
+            }
+        ]
+    )
 
-    return response
+    data_assessment_classification = message.content
+    print("Anthropic result",data_assessment_classification)
+
+    return data_assessment_classification
 
 
 def get_data_requirement_documents(legislation_doc, data_from_code):
@@ -292,27 +307,32 @@ def answer_pia_questions_individually(project_object,privacy_query):
                     "properties": {
                         "proj_data": {
                             "type": "string",
-                            "description": "Data Classification Capture",
+                            "description": "Information and Data about the project",
                         },
                         "data_from_code": {
                             "type": "string",
-                            "description": "data used in the code",
+                            "description": "Data that is mentioned in the code of the project",
                         }
                     },
-                    "required": ["project_description"],
+                    "required": ["proj_data, data_from_code"],
                 },
             },
         }
     
+    names_to_functions = {
+        "retrieve_payment_status": functools.partial(retrieve_payment_status, df=df),
+        "retrieve_payment_date": functools.partial(retrieve_payment_date, df=df),
+    }
+
     """
     function calling here with this mistral model 
     """
-    tools = [get_data_classification_response]
+    tools = [function_call_data_classification]
 
     client_mistral = MistralClient(api_key=os.environ.get("MISTRAL_API_KEY"))
     mistral_model = "mistral-large-latest"
 
-    chat_history = [ChatMessage(role="user", content="Can you give a data classification report on the project?")]
+    chat_history = [ChatMessage(role="user", content="Can you give a data classification problem of the project?")]
     
     response = client_mistral.chat(
         model=mistral_model, messages=chat_history, tools=tools, tool_choice="auto"
@@ -320,4 +340,4 @@ def answer_pia_questions_individually(project_object,privacy_query):
 
     print(response)
 
-    pass
+    return response
