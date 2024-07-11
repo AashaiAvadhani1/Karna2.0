@@ -85,7 +85,7 @@ A more optimistic projection suggests the Data Governance Market could hit $13.9
 
 
 #### RAG pipeline using LangChain, Gemini pro, Faiss, Mistral, Anthropic
-This is Karna, the first every automated Privacy Risk Assessment Tool that reads code and understands privacy risks to your company. 
+This is Karna, the first ever automated Privacy Risk Assessment Tool that reads code and understands privacy risks to your company. 
 
 
 #### Local Installation
