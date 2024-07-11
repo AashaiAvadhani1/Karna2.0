@@ -96,7 +96,7 @@ Get your [Gemini Pro API key](https://makersuite.google.com/app/apikey)
 
 Create a `.env` file in the project root folder and add the API key like below (add yours, the following won't work):
 ```bash
-GOOGLE_API_KEY = "YZzaSyB183kjbiaGIkbsdafbjN5o37OphpjZAy989bas"
+GOOGLE_API_KEY = "Type_Your_Key_Here"
 ```
 
 #### Run the app
