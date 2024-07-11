@@ -257,8 +257,7 @@ Lets work this out in a step by step way to be sure we have the right answer.
 Sensitive Data is defined as the following data:
 demographic data, racial data, gender
 
-Insert the privacy data classification
-
+List all the data mentioned step by step including variable names, the corresponding data type and a short 5 sentence description of the data
 
 ### Steps ###
 1- Summarize the objective of the code

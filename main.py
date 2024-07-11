@@ -9,6 +9,7 @@ from src.user_interface import user_input
 from src.vector_store import *
 from src.code_compliance import *
 from src.pia import *
+from src.code_class import *
 import fitz  # PyMuPDF for PDF processing
 
 import time as time
@@ -50,16 +51,19 @@ def extract_text_from_pdf(pdf_file):
     return text
 
 # Function for the questionnaire page
+
 def questionnaire():
-    st.title("Code Compliance Onboarding Questionnaire")
+    st.header("KarnaAutomate")
+
+    st.caption("Get your PIA done in less than 10 minutes")
     
     # Example questions
     company_name = st.text_input("Company Name:")
     project_name = st.text_input("Project Name:")
-    code_complexity = st.selectbox("Code Complexity", ["Simple", "Moderate", "Complex"])
-    additional_notes = st.text_area("Additional Notes:")
+    additional_notes = st.text_area("Enter a Data Dictionary, Project Description etc...")
+    code = st.text_area("Enter the Code for your project:")
 
-    uploaded_file = st.file_uploader("Upload your PDF file", type=["pdf"])
+    uploaded_file = st.file_uploader("Or Upload your documents as a PDF", type=["pdf"])
     if uploaded_file is not None:
         with st.spinner("Processing PDF..."):
             text = extract_text_from_pdf(uploaded_file)
@@ -75,16 +79,16 @@ def questionnaire():
         responses = {
             "Company Name": company_name,
             "Project Name": project_name,
-            "Code Complexity": code_complexity,
+            "Code": code,
             "Additional Notes": additional_notes,
             "Uploaded File": uploaded_file.name if uploaded_file else None
         }
         joblib.dump(responses, os.path.join(DATA_DIR, 'questionnaire_responses.pkl'))
+        return responses
 
 # Main function
 def main():
     st.set_page_config("KarnaBot")
-    st.header("KarnaBot")
 
     # Sidebar navigation
     page = st.sidebar.selectbox("Choose a page", ["Chat", "Questionnaire"])
@@ -219,22 +223,17 @@ def main():
                     st.success("Code processed")
     elif page == "Questionnaire":
         #the pickle files saved will have the information, query into the pickle file to get the responses from the user
-        questionnaire()
+        response_code_object = questionnaire()
 
         # Load responses and run compliance check if responses exist
-        responses = load_questionnaire_responses()
-        if responses:
-            compliance_report = develop_privacy_impact_assessment(
-                responses["Company Name"],
-                responses["Project Name"],
-                responses["Code Complexity"],
-                responses["Additional Notes"],
-                responses["Uploaded File"]
-            )
+        if response_code_object != None:
+            print(response_code_object) #passes in a dictionary
+            project_compliance_checker = CodeProject(response_code_object)
+            pia_question = "Please give any generated, observed, derived or inferred data processed by this project about a user?"
+            answer_pia_question = answer_pia_questions_individually(project_compliance_checker, pia_question)
+            print(answer_pia_question)
             st.write("**Compliance Report:**")
             st.markdown(compliance_report)
-        
-        #implement the privacy impact assessment legislation
         
 
 if __name__ == "__main__":

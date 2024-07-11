@@ -32,13 +32,14 @@ client_anthropic = anthropic.Anthropic(
     api_key= "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",
 )
 
-mistral_model = ChatMistralAI(mistral_api_key= os.environ.get("MISTRAL_API_KEY"), temperature = 0.6)
+mistral_model = ChatMistralAI(mistral_api_key= os.environ.get("MISTRAL_API_KEY"), temperature = 0.5)
 
 """
-From the PIA embedding store, we can query into the embedding to get the templates for a Privvacy impact assessments
+Description: This is for generating PIA questions NOT Answering
+From the PIA embedding store,
+ we can query into the embedding to get the templates for a Privvacy impact assessments
 """
 def get_template_PIA():
-    user_question = ""
     embeddings4 = HuggingFaceEmbeddings(model_name='LaBSE')
     new_db = FAISS.load_local("faiss_index_pia", embeddings4, allow_dangerous_deserialization=True)
 
@@ -107,14 +108,10 @@ Marketing
 """
 Easier dev time
 This will generate a privacy impact assessment from scratch!
+Use the template from onetrust
 """
 def develop_privacy_impact_assessment(comp_name, proj_name, project_description, data_dictionary):
-
-
     pass
-
-
-
 
 
 
@@ -140,14 +137,14 @@ def get_data_process_storage_response():
 """
 Harder dev time (per function call agent category)
 Will answer a PIA question individually per query from a legal user
+project_object is the code_class
 """
-def answer_pia_questions_individually(privacy_query):
-
+def answer_pia_questions_individually(project_object,privacy_query):
+    print(project_object.display_info())
     #get the data from the code (should be stored as an object)
-
-
-    #per function call for each category, build the agent here 
-    #build an agent with each function calling for each category of question
+    project_data_code = project_object.data_from_code
+    #per function call for each category, build the agent here for answering PIA questions
+    #Per cateogry have to answer each PIA question
     data_collection_response = {
             "type": "function",
             "function": {
@@ -166,6 +163,14 @@ def answer_pia_questions_individually(privacy_query):
             },
         }
     
+    """
+    function calling here with this mistral model 
+    """
+    tools = [tool_payment_status, tool_payment_date]
+
+    response = client.chat(
+        model=mistral_model, messages=chat_history, tools=tools, tool_choice="auto"
+    )
     print(data_collection_response)
 
     #have the mistral model here pick the function
