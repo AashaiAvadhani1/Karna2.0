@@ -70,19 +70,6 @@ Contact details for our team members can be found in the `team` directory.
 We believe Karna will revolutionize compliance checking in software development and data science, providing valuable support to data scientists and developers, and lightening the load for legal professionals as well as programmers. For detailed documentation and to start using Karna, please refer to the resources available in this repository.
 
 
-#### Market Opportunity
-
-Vanta, OneTrust have created a new category of privacy automation.
-Many competitors like RelyanceAI have spurred up in 
-
-The data governance and privacy market has become increasingly important as organizations seek to comply with regulations, protect sensitive information, and gain competitive advantages through effective data management. This market intersects with competition law, as data protection and competition authorities apply different frameworks and pursue different policy objectives.
-
-The data governance and privacy market is experiencing significant growth, with various projections for its total addressable market:
-Liminal projects a TAM of $2.2 billion in 2024 for privacy and consent management, with an expected compound annual growth rate (CAGR) of 19.3%, reaching $5.4 billion by 2028.
-Mordor Intelligence estimates the Data Governance Market size at $3.27 billion in 2024, projected to reach $8.03 billion by 2029, growing at a CAGR of 19.72%.
-A more optimistic projection suggests the Data Governance Market could hit $13.92 billion by 2031.
-
-
 #### RAG pipeline using LangChain, Gemini pro, Faiss, Mistral, Anthropic
 This is Karna, the first ever automated Privacy Risk Assessment Tool that reads code and understands privacy risks to your company. 
 
