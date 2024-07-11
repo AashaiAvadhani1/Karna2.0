@@ -18,7 +18,7 @@ The motivation behind Karna is to empower data scientists and software engineers
 Karna is a cutting-edge GenAI solution tailored for data scientists and software engineers to ensure their code adheres to key privacy legislation, including GDPR, CCPA, HIPAA, and the Privacy Act of 1974. This innovative application features an intuitive chatbot, enabling users to ask detailed questions about the entirety of these legal documents. Additionally, Karna provides powerful tools to analyze and verify your code's compliance with specific laws, ensuring your projects meet all necessary regulatory standards. By leveraging Karna, you can streamline your compliance processes, reduce legal risks, and focus on building high-quality, privacy-compliant software.
 
 ## **Data Background**
-To ensure Karna's effectiveness, we curated a comprehensive dataset comprising GDPR, CPA, and related legal texts. This dataset was meticulously preprocessed to facilitate accurate analysis and compliance checking.
+To ensure Karna's effectiveness, we curated a comprehensive dataset comprising GDPR, CPA, various U.S. legislation regarding data privacy, and other related legal texts. This dataset was meticulously preprocessed to facilitate accurate analysis and compliance checking.
 
 ## **Model Training**
 Training Karna involved:
