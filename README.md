@@ -12,10 +12,9 @@
 9. **Key Risks and Future Work**
 10. **Meet the Team!**
 
-#### **Market Opportunity**
+## **Market Opportunity**
 
 Vanta, OneTrust have created a new category of privacy automation.
-Many competitors like RelyanceAI have spurred up in 
 
 The data governance and privacy market has become increasingly important as organizations seek to comply with regulations, protect sensitive information, and gain competitive advantages through effective data management. This market intersects with competition law, as data protection and competition authorities apply different frameworks and pursue different policy objectives.
 
