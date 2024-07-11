@@ -12,7 +12,7 @@
 9. **Key Risks and Future Work**
 10. **Meet the Team!**
 
-#### Market Opportunity
+#### **Market Opportunity**
 
 Vanta, OneTrust have created a new category of privacy automation.
 Many competitors like RelyanceAI have spurred up in 
