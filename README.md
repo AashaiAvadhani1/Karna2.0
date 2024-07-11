@@ -2,14 +2,27 @@
 
 ## **Table of Contents**
 1. **Motivation**
-2. **Introducing Karna**
-3. **Data Background**
-4. **Model Training**
-5. **Model Inference**
-6. **Prompt Testing**
-7. **User Experience (UX)**
-8. **Key Risks and Future Work**
-9. **Meet the Team!**
+2. **Market Opportunity**
+3. **Introducing Karna**
+4. **Data Background**
+5. **Model Training**
+6. **Model Inference**
+7. **Prompt Testing**
+8. **User Experience (UX)**
+9. **Key Risks and Future Work**
+10. **Meet the Team!**
+
+#### Market Opportunity
+
+Vanta, OneTrust have created a new category of privacy automation.
+Many competitors like RelyanceAI have spurred up in 
+
+The data governance and privacy market has become increasingly important as organizations seek to comply with regulations, protect sensitive information, and gain competitive advantages through effective data management. This market intersects with competition law, as data protection and competition authorities apply different frameworks and pursue different policy objectives.
+
+The data governance and privacy market is experiencing significant growth, with various projections for its total addressable market:
+Liminal projects a TAM of $2.2 billion in 2024 for privacy and consent management, with an expected compound annual growth rate (CAGR) of 19.3%, reaching $5.4 billion by 2028.
+Mordor Intelligence estimates the Data Governance Market size at $3.27 billion in 2024, projected to reach $8.03 billion by 2029, growing at a CAGR of 19.72%.
+A more optimistic projection suggests the Data Governance Market could hit $13.92 billion by 2031.
 
 ## **Motivation**
 The motivation behind Karna is to empower data scientists and software engineers by providing them with a robust tool that eliminates the need to consult legal experts for every privacy-related query within their code. Navigating the complexities of privacy legislation like GDPR, CCPA, HIPAA, and the Privacy Act of 1974 can be daunting and time-consuming. Traditionally, ensuring compliance requires frequent interactions with legal professionals, which can slow down development processes and increase costs. Karna addresses this challenge by offering an AI-driven solution that provides instant access to comprehensive legal insights and compliance checks. This allows developers to seamlessly integrate privacy considerations into their workflows, ensuring their code meets regulatory standards without the constant need for legal intervention. By streamlining the compliance process, Karna enables developers to focus more on innovation and less on legal complexities, ultimately accelerating the development of privacy-compliant software solutions.
