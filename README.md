@@ -33,7 +33,7 @@ Detailed methodologies and scripts for training Karna are available in the `trai
 Karna's inference capabilities allow it to analyze new code submissions in real-time. Users receive immediate feedback on compliance status and actionable insights on necessary modifications.
 
 ## **Prompt Testing**
-We rigorously tested Karna using metrics tailored to compliance checking, ensuring robust performance across various code samples and legal frameworks. Test results and evaluation scripts can be accessed in the `testing` directory.
+We rigorously tested Karna using differently engineered prompts tailored to compliance checking, ensuring robust performance across various code samples and legal frameworks.
 
 ## **User Experience (UX)**
 Karna offers an intuitive user interface designed for data scientists and developers. It supports interactive sessions where users can query specific legal clauses or receive guidance on compliance issues related to GDPR, CPA, and other regulations. Setup instructions and UX documentation are provided in the `UX` directory.
