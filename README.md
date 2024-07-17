@@ -103,6 +103,6 @@ GOOGLE_API_KEY = "Type_Your_Key_Here"
 
 From the project root directory, run the following command: 
 ```
-streamlit run app.py
+streamlit 
 ```
 The app will open in your browser.
