@@ -9,11 +9,14 @@ import sys
 import os
 
 # Add the project root directory and the KarnaBot directory to the Python path
-sys.path.append(os.path.abspath(os.path.dirname(__file__)))
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), 'KarnaBot')))
+# Add the current directory to the system path
+# sys.path.append(os.path.abspath(os.path.dirname(__file__)))
+
+# Add the parent directory (KarnaBot) to the system path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
-from KarnaBot import main_bot
+from main_bot import deploy_bot
 
 # Initialize session state
 if 'page' not in st.session_state:
@@ -29,7 +32,7 @@ def main():
     elif st.session_state.page == 'compliance_overview':
         compliance_overview.app()
     elif st.session_state.page == 'karnabot':
-        main_bot.deploy_bot()
+        deploy_bot()
 
 
 if __name__ == "__main__":
