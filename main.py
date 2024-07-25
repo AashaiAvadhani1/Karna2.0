@@ -14,6 +14,8 @@ import fitz  # PyMuPDF for PDF processing
 
 import time as time
 
+#Welcome to KarnaBot
+
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
