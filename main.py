@@ -10,9 +10,9 @@ from src.vector_store import *
 from src.code_compliance import *
 from src.pia import *
 from src.code_class import *
+from helper import *
 import fitz  # PyMuPDF for PDF processing
-
-import time as time
+import time
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -51,10 +51,8 @@ def extract_text_from_pdf(pdf_file):
     return text
 
 # Function for the questionnaire page
-
 def questionnaire():
     st.header("KarnaAutomate")
-
     st.caption("Get your PIA done in less than 10 minutes")
     
     # Example questions
@@ -185,12 +183,23 @@ def main():
 
         # Sidebar for document processing
         with st.sidebar:
-            st.header("Upload Code Here:")
-            st.markdown("---")
-            code_input = st.text_area("Enter your Python code here:")
+            st.write("# Code Compliance:")
+            url = st.text_area("Enter your Github Url here:")
+            code = get_github_repo_contents(url)[:1000]
+            print("code type", code)
+
+            st.header("Compliance Regulations")
+            if st.button("HIPA"):
+                st.write("Optimizing for HIPAA Answers...")
+            if st.button("GDPR"):
+                st.write("Optimizing for General Data Protection Regulation (GDPR) Answers...")
+            if st.button("EU AI Act"):
+                st.write("Optimizing for EU AI Act compliance Answers...")
+
+
             if st.button("Submit & Process Code"):
                 with st.spinner("Processing Code..."):
-                    context = code_input
+                    context = code
 
                     compliance_report = check_code_compliance(context)
 
@@ -222,7 +231,7 @@ def main():
                     )
                     st.success("Code processed")
     elif page == "Questionnaire":
-        #the pickle files saved will have the information, query into the pickle file to get the responses from the user
+        # The pickle files saved will have the information, query into the pickle file to get the responses from the user
         response_code_object = questionnaire()
 
         # Load responses and run compliance check if responses exist
@@ -234,7 +243,8 @@ def main():
             print(answer_pia_question)
             st.write("**Compliance Report:**")
             st.markdown(compliance_report)
-        
+
+
 
 if __name__ == "__main__":
     main()
