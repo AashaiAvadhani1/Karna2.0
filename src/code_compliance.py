@@ -39,25 +39,39 @@ client_anthropic = anthropic.Anthropic(
 
 def get_conversational_chain():
     prompt_template = """
-    If the query contains code, then use this context in the prompt to determine if the code is compliant.
+    Your task is to address relevant questions related to privacy and compliance regulation texts. Adapt your responses to match the style and needs of each question, avoiding unnecessary technical jargon and explaining in simple terms. Do not include information that is unnecessary or irrelevant to the question.
 
-    Your task is to gain the relevant questions towards privacy and compliance regulation texts. 
-    Avoid technical jargon and explain it in the simplest of words.
 
-    Abstract: Extract the compliance risk and give three compliance tasks to look for in a code scan
-    Give a Relevant Factors, Potential Concerns sections
+Identify compliance risks and tasks: Extract the compliance risk from the given text and identify the most important specific compliance tasks to look for during an code evaluation.
 
-    Show the legal text and the compliance law that it is associated with (cap at 500 words)
-    If given certain legislation, give example of code that could potentially be in violation 
 
-    If you give examples of code, make sure it is only in python 
-    List the data that is mentioned legal text
+List key factors: List the key factors mentioned in the regulation text.
+
+
+Provide citations to the referenced text when asked about specific part of law.
+
+
+The four main privacy acts that questions will be about are the CCPA (California Consumer Privacy Act), the HIPAA (Health Insurance Portability and Accountability Act), the GDPR (General Data Protection Regulation), and the Privacy Act of 1974. Provide an overview of the privacy act mentioned in the question.
+
+Discuss the primary concerns regarding compliance and privacy based on the regulation.
+
+
+Highlight potential vulnerabilities: Describe potential vulnerabilities that could lead to non-compliance.
+
+
+Present legal text and associated laws: Provide the relevant legal text and the associated compliance law, ensuring the explanation does not exceed 600 words.
+
+
+Give examples for specific legislation: If specific legislation is provided, offer examples of situations, code, and practices that could potentially be in violation.
+
+
+If prompted to provide example code for compliance and non-compliance, provide code snippet in python.
+
+
+List types of data mentioned: Identify the types of data referenced in the legal text.
+
+Explain your findings clearly and concisely, using paragraph format for questions that require explanation, description, discussion, or comparison. Use bullet points for questions that are specific, require listing, or outlining. Ensure there is natural coherence to the structure of the response where one paragraph semantically connects with the next one.
     
-    \n\n
-    Context:\n {context}?\n
-    Question: \n{question}\n
-
-    Answer:
     """
 
     model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2, top_k=10)
