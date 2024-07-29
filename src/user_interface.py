@@ -5,7 +5,6 @@ import streamlit as st
 from langchain.vectorstores import FAISS
 #from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
-
 from src.vector_store import get_conversational_chain
 
 

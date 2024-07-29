@@ -8,7 +8,7 @@ def hash_password(password):
 
 # Hardcoded credentials
 users = {
-    "user@example.com": hash_password("password123")
+    "aashai123@gmail.com": hash_password("password123")
 }
 
 def authenticate_user(username, password):

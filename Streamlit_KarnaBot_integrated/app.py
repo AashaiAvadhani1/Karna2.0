@@ -15,7 +15,7 @@ import os
 # Add the parent directory (KarnaBot) to the system path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-
+#nakul is a fucking dumbass
 from main_bot import deploy_bot
 
 # Initialize session state
@@ -32,7 +32,7 @@ def main():
     elif st.session_state.page == 'compliance_overview':
         compliance_overview.app()
     elif st.session_state.page == 'karnabot':
-        deploy_bot()
+        deploy_bot
 
 
 if __name__ == "__main__":

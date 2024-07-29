@@ -1,7 +1,5 @@
 import os
 from typing import List, Dict, Any
-from dotenv import load_dotenv
-import google.generativeai as genai
 #from langchain import HuggingFaceEmbeddings, FAISS, ChatGoogleGenerativeAI, PromptTemplate, load_qa_chain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
@@ -11,8 +9,7 @@ from langchain.vectorstores import FAISS
 from langchain_google_genai import (ChatGoogleGenerativeAI,
                                     GoogleGenerativeAIEmbeddings)
 from typing import List
-# from langchain.vectorstores import FAISS
-from langchain_community.vectorstores import FAISS
+from langchain.vectorstores import FAISS
 from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
 import anthropic
@@ -28,11 +25,6 @@ from langchain.chains import create_retrieval_chain
 import joblib
 from dotenv import dotenv_values
 
-load_dotenv()
-google_api_key = os.getenv("GOOGLE_API_KEY")
-
-if not google_api_key:
-    raise ValueError("GOOGLE_API_KEY is not set. Please set it in the .env file.")
 
 config = dotenv_values(".env")  # config = {"USER": "foo", "EMAIL": "foo@example.org"}
 
@@ -49,40 +41,37 @@ def get_conversational_chain():
     prompt_template = """
     Your task is to address relevant questions related to privacy and compliance regulation texts. Adapt your responses to match the style and needs of each question, avoiding unnecessary technical jargon and explaining in simple terms. Do not include information that is unnecessary or irrelevant to the question.
 
-
 Identify compliance risks and tasks: Extract the compliance risk from the given text and identify the most important specific compliance tasks to look for during an code evaluation.
-
 
 List key factors: List the key factors mentioned in the regulation text.
 
-
 Provide citations to the referenced text when asked about specific part of law.
-
 
 The four main privacy acts that questions will be about are the CCPA (California Consumer Privacy Act), the HIPAA (Health Insurance Portability and Accountability Act), the GDPR (General Data Protection Regulation), and the Privacy Act of 1974. Provide an overview of the privacy act mentioned in the question.
 
 Discuss the primary concerns regarding compliance and privacy based on the regulation.
 
-
 Highlight potential vulnerabilities: Describe potential vulnerabilities that could lead to non-compliance.
-
 
 Present legal text and associated laws: Provide the relevant legal text and the associated compliance law, ensuring the explanation does not exceed 600 words.
 
-
 Give examples for specific legislation: If specific legislation is provided, offer examples of situations, code, and practices that could potentially be in violation.
 
-
 If prompted to provide example code for compliance and non-compliance, provide code snippet in python.
-
 
 List types of data mentioned: Identify the types of data referenced in the legal text.
 
 Explain your findings clearly and concisely, using paragraph format for questions that require explanation, description, discussion, or comparison. Use bullet points for questions that are specific, require listing, or outlining. Ensure there is natural coherence to the structure of the response where one paragraph semantically connects with the next one.
     
+    
+    \n\n
+    Context:\n {context}?\n
+    Question: \n{question}\n
+
+    Answer:
     """
 
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2, top_k=10,google_api_key=google_api_key)
+    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2, top_k=10)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
@@ -250,8 +239,7 @@ def get_code_compliance(code: str) -> str:
 
 def user_input(user_question: str, history: List[dict]):
     embeddings4 = HuggingFaceEmbeddings(model_name='LaBSE')
-    faiss_index_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'faiss_index')
-    new_db = FAISS.load_local(faiss_index_dir, embeddings4, allow_dangerous_deserialization=True)
+    new_db = FAISS.load_local("faiss_index", embeddings4, allow_dangerous_deserialization=True)
     docs = new_db.similarity_search(user_question)
 
     chain = get_conversational_chain()
@@ -465,41 +453,6 @@ def get_result(legal_doc_data_requirements, data_code):
     return compliance_assessment[0].text
 
 
-"""
-Loading in the questionnaire responses from the pickle file
-"""
-def load_questionnaire_responses():
-    try:
-        responses = joblib.load(os.path.join(DATA_DIR, 'questionnaire_responses.pkl'))
-        return responses
-    except FileNotFoundError:
-        return None
-
-
-"""
-Checking code compliances from pickle file from the DATA_DIR
-"""
-def check_code_compliance(user_code: str):
-    # Load the questionnaire responses
-    responses = load_questionnaire_responses()
-    
-    if not responses:
-        return "No questionnaire responses found."
-    
-    # Example usage of responses in the compliance check
-    company_name = responses.get("Company Name", "Unknown Company")
-    project_name = responses.get("Project Name", "Unknown Project")
-    
-    # Use the responses in your compliance logic
-    data_code = get_data_code_anthropic(user_code)
-    
-    # Use legal doc name from responses if applicable
-    legal_doc = responses.get("Compliance Standard", "General Data Protection Regulation")
-    legal_doc_data_requirements = get_data_requirement_documents(legal_doc, data_code)
-    
-    result_code_compliance = get_result(legal_doc_data_requirements, data_code)
-    
-    return f"Compliance check for {company_name} on project {project_name}: {result_code_compliance}"
 
 
 def check_code_compliance(user_code: str):

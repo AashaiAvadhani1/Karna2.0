@@ -187,7 +187,7 @@ def main():
         with st.sidebar:
             st.write("# Code Compliance:")
             url = st.text_area("Enter your Github Url here:")
-            code = get_github_repo_contents(url)[:1000]
+            code = get_github_repo_contents(url)
             print("code type", code)
 
             st.header("Compliance Regulations")

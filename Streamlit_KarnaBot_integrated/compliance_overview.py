@@ -32,22 +32,17 @@ def display_pdf(file_path):
 
 # Function to render the compliance document overview
 def compliance_document_overview():
-    # Section for the back button
     if st.button("Back"):
         st.session_state.page = 'homepage'
         st.experimental_rerun()
 
-    # Title for the section
     st.header("Compliance Document Overview")
 
-    # Columns for search input and search icon
     search_col1, search_col2 = st.columns([9, 1])
 
-    # Input field for search terms/phrases
     with search_col1:
         search_terms = st.text_input("Search for key terms/phrases", placeholder="Example: Restrictions", key="search_terms")
 
-    # Button with an image icon to simulate a search button
     with search_col2:
         with stylable_container(
             key="logo",
@@ -88,7 +83,6 @@ def compliance_document_overview():
 
 # Main function to run the Streamlit page
 def app():
-
     compliance_document_overview()
 
 
