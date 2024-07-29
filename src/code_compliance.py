@@ -1,5 +1,7 @@
 import os
 from typing import List, Dict, Any
+from dotenv import load_dotenv
+import google.generativeai as genai
 #from langchain import HuggingFaceEmbeddings, FAISS, ChatGoogleGenerativeAI, PromptTemplate, load_qa_chain
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
@@ -9,7 +11,8 @@ from langchain.vectorstores import FAISS
 from langchain_google_genai import (ChatGoogleGenerativeAI,
                                     GoogleGenerativeAIEmbeddings)
 from typing import List
-from langchain.vectorstores import FAISS
+# from langchain.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS
 from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.chains import RetrievalQA
 import anthropic
@@ -25,6 +28,11 @@ from langchain.chains import create_retrieval_chain
 import joblib
 from dotenv import dotenv_values
 
+load_dotenv()
+google_api_key = os.getenv("GOOGLE_API_KEY")
+
+if not google_api_key:
+    raise ValueError("GOOGLE_API_KEY is not set. Please set it in the .env file.")
 
 config = dotenv_values(".env")  # config = {"USER": "foo", "EMAIL": "foo@example.org"}
 
@@ -74,7 +82,7 @@ Explain your findings clearly and concisely, using paragraph format for question
     
     """
 
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2, top_k=10)
+    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2, top_k=10,google_api_key=google_api_key)
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
@@ -242,7 +250,8 @@ def get_code_compliance(code: str) -> str:
 
 def user_input(user_question: str, history: List[dict]):
     embeddings4 = HuggingFaceEmbeddings(model_name='LaBSE')
-    new_db = FAISS.load_local("faiss_index", embeddings4, allow_dangerous_deserialization=True)
+    faiss_index_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'faiss_index')
+    new_db = FAISS.load_local(faiss_index_dir, embeddings4, allow_dangerous_deserialization=True)
     docs = new_db.similarity_search(user_question)
 
     chain = get_conversational_chain()
