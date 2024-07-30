@@ -15,9 +15,6 @@ from langchain.chains import RetrievalQA
 import anthropic
 
 ## Installation of MISTRAL
-from langchain_community.document_loaders import TextLoader
-from langchain_mistralai.chat_models import ChatMistralAI
-from langchain_mistralai.embeddings import MistralAIEmbeddings
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain_core.prompts import ChatPromptTemplate
@@ -33,49 +30,8 @@ DATA_DIR = 'data/'
 
 client_anthropic = anthropic.Anthropic(
     # defaults to os.environ.get("ANTHROPIC_API_KEY")
-    api_key= config.get("ANTHROPIC_API_KEY"),
+    api_key= "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",
 )
-
-
-def get_conversational_chain():
-    prompt_template = """
-    Your task is to address relevant questions related to privacy and compliance regulation texts. Adapt your responses to match the style and needs of each question, avoiding unnecessary technical jargon and explaining in simple terms. Do not include information that is unnecessary or irrelevant to the question.
-
-Identify compliance risks and tasks: Extract the compliance risk from the given text and identify the most important specific compliance tasks to look for during an code evaluation.
-
-List key factors: List the key factors mentioned in the regulation text.
-
-Provide citations to the referenced text when asked about specific part of law.
-
-The four main privacy acts that questions will be about are the CCPA (California Consumer Privacy Act), the HIPAA (Health Insurance Portability and Accountability Act), the GDPR (General Data Protection Regulation), and the Privacy Act of 1974. Provide an overview of the privacy act mentioned in the question.
-
-Discuss the primary concerns regarding compliance and privacy based on the regulation.
-
-Highlight potential vulnerabilities: Describe potential vulnerabilities that could lead to non-compliance.
-
-Present legal text and associated laws: Provide the relevant legal text and the associated compliance law, ensuring the explanation does not exceed 600 words.
-
-Give examples for specific legislation: If specific legislation is provided, offer examples of situations, code, and practices that could potentially be in violation.
-
-If prompted to provide example code for compliance and non-compliance, provide code snippet in python.
-
-List types of data mentioned: Identify the types of data referenced in the legal text.
-
-Explain your findings clearly and concisely, using paragraph format for questions that require explanation, description, discussion, or comparison. Use bullet points for questions that are specific, require listing, or outlining. Ensure there is natural coherence to the structure of the response where one paragraph semantically connects with the next one.
-    
-    
-    \n\n
-    Context:\n {context}?\n
-    Question: \n{question}\n
-
-    Answer:
-    """
-
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2, top_k=10)
-    prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
-    chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
-    return chain
-
 
 
 def get_code_conversational_chain():
@@ -159,83 +115,6 @@ def get_data_from_model(input_text, model, temperature = 0.3):
     return responses
 
 
-##def get_code_compliance(code: str) -> str:
-    eu_ai_act_prompt = """
-    Role: Lawyer Task
-
-    You are a lawyer tasked with evaluating the data in the General Data Protection Regulation Act legislation. This code can be a piece of software or code building a machine learning or AI model. Your task is to extract and evaluate the data, variables, and types of data used in the code to ensure compliance with the General Data Protection Regulation Act. Follow the steps methodically to ensure we have the correct answer.
-
-    ### Examples of Sensitive Data ###
-
-    - Demographic data
-    - Gender
-    - Ethnicity
-    - Location (zip code)
-    - Health information
-    - Financial information
-    - Personal identification numbers
-
-    ### Steps ###
-
-    1. **Summarize the Objective of the Legislation**: Begin by understanding and summarizing what the legislation is intended to accomplish. Is it performing data analysis, training a machine learning model, or something else?
-
-    2. **Summarize the Data's Purpose in the statute**: Identify the role of the data within the legislation. What is the data used for? How does it contribute to the legislation's objective?
-
-    3. **Explain the Types of Data Used in the legislation**: Identify and explain the types of data used in the legislation. Are they integers, strings, floats, or more complex types?
-
-    4. **Identify Sensitive Data**: Determine if the data includes sensitive information. Look for demographic data, racial data, gender, health information, financial information, etc.
-
-    5. **Assess Compliance with the General Data Protection Regulation Act**: Evaluate whether the usage of sensitive data complies with the General Data Protection Regulation Act. Provide detailed reasoning for your assessment.
-
-    6. **List Variables, Datatypes, Sensitivity, and Compliance**: Create a detailed list of all variables, their corresponding datatypes, whether they are sensitive, and whether their use is compliant.
-
-    7. **Identify Non-Compliant Areas**: Identify and list areas in the code where the data usage does not comply with GDPR and the General Data Protection Regulation Act. Explain why these areas are non-compliant.
-
-    **Example**:
-    - `age`: integer, not sensitive, compliant
-    - `income`: float, not sensitive, compliant
-    - `gender`: string, sensitive, compliant with justification
-    - `ethnicity`: string, sensitive, compliant with justification
-    - `zip_code`: string, sensitive, compliant
-    - `ssn`: string, sensitive, non-compliant because personal identification numbers are not allowed
-
-    ### Example Analysis ###
-
-    1. **Objective**: The legislation aims to train a machine learning model to predict customer churn.
-    2. **Data's Purpose**: The data is used to train and validate the machine learning model by providing historical customer data.
-    3. **Types of Data**: The legislation uses integers for age, floats for income, and strings for gender and customer ID.
-    4. **Sensitive Data**: The legislation includes sensitive data such as gender, ethnicity, and location.
-    5. **Compliance with General Data Protection Regulation Act**: The inclusion of sensitive data is justified and complies with the Act's provisions on fairness, transparency, and non-discrimination.
-    6. **Variables, Datatypes, Sensitivity, and Compliance**:
-    - `age`: integer, not sensitive, compliant
-    - `income`: float, not sensitive, compliant
-    - `gender`: string, sensitive, compliant with justification
-    - `ethnicity`: string, sensitive, compliant with justification
-    - `zip_code`: string, sensitive, compliant
-    7. **Non-Compliant Areas**: The `ssn` variable is non-compliant because personal identification numbers are not allowed
-    """
-
-    variables = extract_code_data(code)
-    
-    user_question = "Does the code use any of the following data types: {}?".format(
-        ", ".join([var["type"] for var in variables])
-    )
-    print("user question", user_question)
-    embeddings4 = HuggingFaceEmbeddings(model_name='LaBSE')
-    new_db = FAISS.load_local("faiss_index", embeddings4, allow_dangerous_deserialization=True)
-    
-    docs = new_db.similarity_search(user_question)
-    print(docs)
-    context = " ".join([doc.page_content for doc in docs])
-
-    model = ChatGoogleGenerativeAI(model="gemini-pro", temperature=0.2)
-    prompt = PromptTemplate(template=eu_ai_act_prompt, input_variables=["context", "question"])
-    chain = load_qa_chain(model, chain_type="stuff", prompt=prompt, input_variables=["context", "question"])
-
-    response = chain({"context": context, "question": "Is this code compliant with GDPR and the EU AI Act?"})
-    
-    return response["output_text"]
-
 
 def user_input(user_question: str, history: List[dict]):
     embeddings4 = HuggingFaceEmbeddings(model_name='LaBSE')
@@ -275,6 +154,8 @@ List all the data mentioned step by step including variable names, the correspon
 4- Identify if the data is sensitive such as demographic data, racial data, gender
 5- Classify each data mentioned in the code according to the privacy classification above 
 6- list out all the variables, its corresponding datatype and whether its sensitive
+7. List which systems are used and if you see any data storage transfers
+8. 
 """
 
 
@@ -402,36 +283,38 @@ def get_data_requirement_documents(legislation_doc, data_from_code):
 
 
 
-def get_result(legal_doc_data_requirements, data_code):
+def generate_pia_answers(pia_template, data_code):
 
     decider_prompt = """
-            You are an evaluator of compliance.
-            You are given 2 pieces of context, a piece of code and the sensitive data mentioned in a legal documentation.
 
-            If the data that is used in the code is similar to the data mentioned in the legal documentation (that is sensitive and what should not be used)
-            then the code has evidence to be non compliant and you have to explain why.
-                Explain the reason why if the data is mentioned then why it should be not compliant with GDPR. 
-                Mention the data that is used and mention the statue and text that the legislation came from. 
+            FOR EACH SECTION MENTION THE DATA USED AND CODE PER SECTION 
+            Look at the way the data is being used.
 
+            If it is possible to identify a user based off the data , then that is a compliance risk and should be mentioned throughout the PIA template. 
 
-            If the data that is used in the code is not similar to the sensitive data mentioned in the legal documentaiton, 
-            then the code has evidence to be compliant and explain why 
-                Explain the reason why if the data is not mentioned then why it should be more compliant with GDPR. 
+            Mention if there is any hashing or P1 or P2 level data used
 
-                
-            Give a confidence score from 0 to 100 percent on your conclusion.
+            ALWAYS GIVE A TEMPLATE WITH THE 9 SECTIONS
+             You are an evaluator of compliance. You are given a privacy impact assessmente template.
 
+            Your task is to look at the template and fill out each section to the best of your ability given the information about the project code.
+        
             ALWAYS give a warning saying to consult a expert privacy counsel and this is not legal advice 
+
+            The output should be a 9 section document about a PIA given the code requirements. 
+             
+            Show the developer how to improve the software project so that is has less privacy risks 
+
              """
 
-    print("legal doc",type(legal_doc_data_requirements))
-    print("data code",type(data_code))
+    print("legal doc",type(pia_template))
+    print("data code", data_code)
 
 
     message = client_anthropic.messages.create(
         model="claude-3-opus-20240229",
         max_tokens=4096,
-        temperature=0.2,
+        temperature=0.1,
         system= decider_prompt,
         messages=[
             {
@@ -439,7 +322,7 @@ def get_result(legal_doc_data_requirements, data_code):
                 "content": [
                     {
                         "type": "text",
-                        "text": "Legal Text Data: " + legal_doc_data_requirements + " Code in data: " + data_code
+                        "text": "Legal Text Data: " + pia_template + " Code in data: " + data_code
                     }
                 ]
             }
@@ -453,14 +336,152 @@ def get_result(legal_doc_data_requirements, data_code):
 
 
 
-def check_code_compliance(user_code: str):
-    
-    data_code = get_data_code_anthropic(user_code)
-    # get the data requirement from the legal doc
 
-    legal_doc = "General Data Protection Regulation"
-    legal_doc_data_requirements = get_data_requirement_documents(legal_doc,data_code)
-    
-    result_code_compliance = get_result(legal_doc_data_requirements, data_code)
-    
-    return result_code_compliance
+def get_pia_template():
+    pia_template = """
+### Privacy Impact Assessment (PIA) Template
+
+
+FOR EACH SECTION MENTION THE DATA USED AND CODE PER SECTION 
+
+
+ANSWER 
+
+---
+
+#### Section 1: Project Information
+1. **Project Name**:
+2. **Project Description**:
+3. **Project Lead**:
+4. **Contact Information**:
+5. **Date**:
+
+---
+
+#### Section 2: Data Collection and Processing
+1. **Describe the personal data to be collected**:
+   - Types of data (e.g., name, address, email)
+   - Special categories of data (e.g., health information, financial data)
+
+2. **Purpose of data collection**:
+   - Why is this data being collected?
+   - How will it be used?
+
+3. **Data sources**:
+   - Where will the data come from (e.g., directly from individuals, third parties)?
+
+---
+
+If it is possible to identify a user based off the software project should be mentioned here
+#### Section 3: Legal and Compliance
+1. **Legal basis for processing**:
+   - Consent
+   - Contractual necessity
+   - Legal obligation
+   - Vital interests
+   - Public task
+   - Legitimate interests
+
+2. **Relevant laws and regulations**:
+   - GDPR
+   - CCPA
+   - Other applicable laws
+
+---
+
+#### Section 4: Data Storage and Security
+1. **Data storage location**:
+   - mention the data used and where its stored
+   - Where will the data be stored?
+   - Will it be stored locally or in the cloud?
+
+2. **Security measures in place**:
+   - Encryption
+   - Access controls
+   - Data backup procedures
+
+---
+
+#### Section 5: Data Sharing and Transfers
+
+
+1. **Data sharing**:
+    - For this section look at what data the code is using and classify it as p1 p2 level data
+    - see if the data is being shared to different sources
+   - Who will the data be shared with?
+   - For what purpose?
+
+
+
+2. **Data transfers**:
+   - Will the data be transferred outside the organization?
+   - Will it be transferred internationally?
+   - What safeguards are in place for international transfers?
+   - Answer the following questions 
+   - transfer of data is seen when the code is moving data between contains or systems like Google to AWS
+
+---
+
+#### Section 6: Data Retention and Deletion
+1. **Data retention policy**:
+   - How long will the data be kept?
+   - What criteria will be used to determine the retention period?
+
+2. **Data deletion**:
+   - What processes are in place for secure data deletion?
+
+---
+
+#### Section 7: Risk Assessment and Mitigation
+1. **Potential risks to data subjects**:
+   - Unauthorized access
+   - Data breaches
+   - Inaccurate data
+
+2. **Risk mitigation measures**:
+   - Measures taken to mitigate identified risks
+   - Any remaining risks and how they will be managed
+
+---
+
+
+ Add more information and guarantee that the thing is there
+#### Section 8: Data Subject Rights
+1. **Rights of data subjects**:
+   - Access
+   - Rectification
+   - Erasure
+   - Restriction
+   - Portability
+   - Objection
+
+2. **Procedures for handling data subject requests**:
+   - How can individuals exercise their rights?
+   - What is the process for handling these requests?
+
+---
+
+#### Section 9: Consultation and Approval
+1. **Consultation with stakeholders**:
+   - Have stakeholders been consulted about this PIA?
+   - Who was consulted?
+
+2. **Approval**:
+   - Project Lead signature
+   - Date
+   - Data Protection Officer (DPO) signature (if applicable)
+   - Date
+
+---
+
+This template can be customized to suit the specific needs and requirements of your organization. Ensure that each section is thoroughly reviewed and completed before finalizing the PIA.
+"""
+
+    return pia_template
+
+
+def generate_pia(user_code: str):
+    data_code = get_data_code_anthropic(user_code)
+    privacy_impact_assessment_template = get_pia_template()
+    pia_assessment = generate_pia_answers(privacy_impact_assessment_template, data_code)
+    return pia_assessment

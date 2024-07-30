@@ -16,10 +16,13 @@ from langchain_core.runnables.history import RunnableWithMessageHistory
 import anthropic 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
-from langchain_openai import ChatOpenAI
 from langchain.retrievers import ContextualCompressionRetriever
+#from langchain.retrievers import ContextualCompressionRetriever
+from langchain.retrievers.document_compressors import FlashrankRerank
 from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
 from langchain_cohere import CohereRerank
+from langchain.chains import RetrievalQA
+from langchain import hub
 
 client_anthropic = anthropic.Anthropic(
     # defaults to os.environ.get("ANTHROPIC_API_KEY")
@@ -175,26 +178,3 @@ Explain your findings clearly and concisely, using paragraph format for question
     )
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
-
-
-
-
-"""
-Re-ranking llama index and cohere part 
-"""
-
-"""
-Gets called for the user input and legal vectordb
-"""
-def user_input(user_question: str, history: List[dict]):
-    embeddings4 = HuggingFaceEmbeddings(model_name='LaBSE')
-    new_db = FAISS.load_local("faiss_index", embeddings4, allow_dangerous_deserialization=True)
-    docs = new_db.similarity_search(user_question)
-
-    chain = get_conversational_chain()
-    response = chain(
-        {"input_documents": docs, "question": user_question, "history": history},
-        return_only_outputs=True
-    )
-
-    return response["output_text"]

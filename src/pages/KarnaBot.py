@@ -1,7 +1,6 @@
 import os
 import joblib
 import streamlit as st
-from bs4 import BeautifulSoup
 import requests
 from dotenv import load_dotenv
 import google.generativeai as genai
@@ -10,12 +9,11 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from src.user_interface import user_input
-from src.vector_store import *
-from src.code_compliance import *
+#from src.vector_store import *
+#from src.code_compliance import *
 #from src.pia import *
 from src.code_class import *
 from helper import *
-import fitz  # PyMuPDF for PDF processing
 import time
 
 
@@ -100,7 +98,7 @@ def app():
 
         # Sidebar for past chats
     with st.sidebar:
-        st.write('# Past Chats')
+        st.write('# KarnaBot')
         if st.session_state.get('chat_id') is None:
             st.session_state.chat_id = st.selectbox(
                 label='Pick a past chat',

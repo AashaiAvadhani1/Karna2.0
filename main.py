@@ -1,8 +1,6 @@
 import os
 import joblib
 import streamlit as st
-from bs4 import BeautifulSoup
-import requests
 from dotenv import load_dotenv
 import google.generativeai as genai
 from src.user_interface import user_input
@@ -11,10 +9,11 @@ from src.code_compliance import *
 from src.pia import *
 from src.code_class import *
 from helper import *
+from src.objects import UserAccount
 import fitz  # PyMuPDF for PDF processing
 import time
 
-#Welcome to KarnaBot
+# Welcome to KarnaBot
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
@@ -35,6 +34,19 @@ def load_past_chats():
         return {}
 
 past_chats = load_past_chats()
+
+# Load user accounts
+def load_user_accounts(filename='user_accounts.pkl'):
+    try:
+        return joblib.load(os.path.join(DATA_DIR, filename))
+    except:
+        return []
+
+# Save user accounts
+def save_user_accounts(user_accounts, filename='user_accounts.pkl'):
+    joblib.dump(user_accounts, os.path.join(DATA_DIR, filename))
+
+user_accounts = load_user_accounts()
 
 # Function to chunk text
 def get_text_chunks(text, chunk_size=1000):
@@ -86,12 +98,19 @@ def questionnaire():
         joblib.dump(responses, os.path.join(DATA_DIR, 'questionnaire_responses.pkl'))
         return responses
 
+# Function to display the user account page
+def display_account_page(user_account):
+    st.title("Account Information")
+    st.write(f"**Name:** {user_account.name}")
+    st.write(f"**Company:** {user_account.company}")
+    st.write(f"**Email:** {user_account.email}")
+    st.write(f"**Phone:** {user_account.phone}")
+
 # Main function
 def main():
     st.set_page_config("KarnaBot")
-
     # Sidebar navigation
-    page = st.sidebar.selectbox("Choose a page", ["Chat", "Questionnaire"])
+    page = st.sidebar.selectbox("Choose a page", ["Chat", "Questionnaire", "Account"])
 
     if page == "Chat":
         # Sidebar for past chats
@@ -198,7 +217,6 @@ def main():
             if st.button("EU AI Act"):
                 st.write("Optimizing for EU AI Act compliance Answers...")
 
-
             if st.button("Submit & Process Code"):
                 with st.spinner("Processing Code..."):
                     context = code
@@ -232,8 +250,8 @@ def main():
                         f'{DATA_DIR}/{st.session_state.chat_id}-gemini_messages',
                     )
                     st.success("Code processed")
+
     elif page == "Questionnaire":
-        # The pickle files saved will have the information, query into the pickle file to get the responses from the user
         response_code_object = questionnaire()
 
         # Load responses and run compliance check if responses exist
@@ -246,7 +264,27 @@ def main():
             st.write("**Compliance Report:**")
             st.markdown(compliance_report)
 
+    elif page == "Account":
+        st.header("User Account Management")
 
+        # Form to add a new user account
+        with st.form("add_user_account"):
+            name = st.text_input("Name")
+            company = st.text_input("Company")
+            email = st.text_input("Email")
+            phone = st.text_input("Phone")
+            submitted = st.form_submit_button("Add Account")
+
+        if submitted:
+            new_user = UserAccount.create_user_account(name, company, email, phone)
+            user_accounts.append(new_user)
+            save_user_accounts(user_accounts)
+            st.success("User account added successfully!")
+
+        # Display user accounts
+        st.write("## Existing User Accounts")
+        for account in user_accounts:
+            st.write(account)
 
 if __name__ == "__main__":
     main()
