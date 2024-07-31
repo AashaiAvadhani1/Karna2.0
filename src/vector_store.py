@@ -8,19 +8,19 @@ from langchain.vectorstores import FAISS
 from langchain_google_genai import (ChatGoogleGenerativeAI,
                                     GoogleGenerativeAIEmbeddings)
 from typing import List
-from langchain.vectorstores import FAISS
-from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
+#from langchain.vectorstores import FAISS
+#from langchain_community.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.memory import ChatMessageHistory
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.runnables.history import RunnableWithMessageHistory
 import anthropic 
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.pydantic_v1 import BaseModel, Field
-from langchain.retrievers import ContextualCompressionRetriever
 #from langchain.retrievers import ContextualCompressionRetriever
-from langchain.retrievers.document_compressors import FlashrankRerank
-from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
-from langchain_cohere import CohereRerank
+#from langchain.retrievers import ContextualCompressionRetriever
+#from langchain.retrievers.document_compressors import FlashrankRerank
+#from langchain.retrievers.contextual_compression import ContextualCompressionRetriever
+#from langchain_cohere import CohereRerank
 from langchain.chains import RetrievalQA
 from langchain import hub
 
