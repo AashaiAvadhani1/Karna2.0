@@ -67,33 +67,34 @@ def get_github_repo_contents(repo_url):
 
     return fetch_contents(api_url, code_file_extensions)
 
-
 def main():
     st.title("Privacy Impact Assessment")
-    url = st.text_input("Enter Github URL:")
+    st.write("""Generate a PIA in less than 5 minutes!
+             """)
+    st.sidebar.title("Input Options")
+    st.sidebar.write("Enter a GitHub URL or directly input your code below:")
     
+    url = st.sidebar.text_input("Enter GitHub URL:")
+    code_input = st.sidebar.text_area("Or input your code here:")
+
+    code = ""
     if url:
         code = get_github_repo_contents(url)
-        print("code", code)
         if code:
-            st.write(f"Repository Information: {code}")
-
-    if st.button("Generate Privacy Impact Assessment"):
-        if url:
-            with st.spinner("Fetching the Code from Github"):
-                time.sleep(5)
-                with st.spinner("Reading the Code"):
-                    time.sleep(5)  
-                    with st.spinner("Reading the Context"):
-                        time.sleep(5)
-                        with st.spinner("Generating the Privacy Impact Assessment"):
-                            time.sleep(5)
-                            if code:
-                                pia_output = generate_pia(code)
-                                st.write(pia_output)
-                            else:
-                                st.warning("Failed to retrieve repository information. Please check the URL and try again.")
+            st.sidebar.write("Repository information retrieved successfully.")
         else:
-            st.warning("Please enter a valid Github URL")
+            st.sidebar.warning("Failed to retrieve repository information. Please check the URL and try again.")
+    
+    if code_input:
+        code = code_input
+    
+    if st.sidebar.button("Generate Privacy Impact Assessment"):
+        if code:
+            with st.spinner("Did you know it costs a company on average $3,000 to create a PIA"):
+                time.sleep(5)
+                pia_output = generate_pia(code)
+                st.write(pia_output)
+        else:
+            st.sidebar.warning("Please enter a valid GitHub URL or input your code directly.")
 
 main()

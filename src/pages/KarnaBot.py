@@ -9,16 +9,12 @@ import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from src.user_interface import user_input
-#from src.vector_store import *
-#from src.code_compliance import *
-#from src.pia import *
-from src.code_class import *
 from helper import *
 import time
+import hashlib
+import random
 
-
-#Welcome to KarnaBot
-
+# Load environment variables
 load_dotenv()
 genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
@@ -49,54 +45,25 @@ def save_chunks(chunks, chunk_file):
 
 # Function to extract text from a PDF file
 def extract_text_from_pdf(pdf_file):
+    import fitz
     doc = fitz.open(stream=pdf_file.read(), filetype="pdf")
     text = ""
     for page in doc:
         text += page.get_text()
     return text
 
-# Function for the questionnaire page
-def questionnaire():
-    st.header("KarnaAutomate")
-    st.caption("Get your PIA done in less than 10 minutes")
-    
-    # Example questions
-    company_name = st.text_input("Company Name:")
-    project_name = st.text_input("Project Name:")
-    additional_notes = st.text_area("Enter a Data Dictionary, Project Description etc...")
-    code = st.text_area("Enter the Code for your project:")
+# Main function for the KarnaBot page
+def main():
 
-    uploaded_file = st.file_uploader("Or Upload your documents as a PDF", type=["pdf"])
-    if uploaded_file is not None:
-        with st.spinner("Processing PDF..."):
-            text = extract_text_from_pdf(uploaded_file)
-            st.text_area("Extracted Text", value=text, height=300)
-            # Process the text if needed, e.g., save to a file, analyze, etc.
-            chunks = get_text_chunks(text)
-            save_chunks(chunks, os.path.join(DATA_DIR, 'pdf_document_chunks.pkl'))
-            st.success("PDF processed and text extracted successfully!")
+    spinner_messages = ["Whats a lawyers favorite drink? Subpoeña coladas ", "Remember this isn't legal advice always consult a lawyer, like Better Call Saul", "How many lawyers does it take to screw a lightbulb? None they rested their case"]
 
-    if st.button("Submit"):
-        st.success("Questionnaire submitted successfully!")
-        # Save the responses if needed
-        responses = {
-            "Company Name": company_name,
-            "Project Name": project_name,
-            "Code": code,
-            "Additional Notes": additional_notes,
-            "Uploaded File": uploaded_file.name if uploaded_file else None
-        }
-        joblib.dump(responses, os.path.join(DATA_DIR, 'questionnaire_responses.pkl'))
-        return responses
+    st.title("Welcome to KarnaBot")
+    st.markdown("""
+    KarnaBot is here to assist you with compliance checks, privacy impact assessments, and more.
+    Use the chat interface below to interact with KarnaBot or fill out the questionnaire to get started.
+    """)
 
-# Main function
-def app():
-    st.set_page_config("KarnaBot")
-
-    # Sidebar navigation
-    #page = st.sidebar.selectbox("Choose a page", ["Chat", "Questionnaire"])
-
-        # Sidebar for past chats
+    # Sidebar for past chats
     with st.sidebar:
         st.write('# KarnaBot')
         if st.session_state.get('chat_id') is None:
@@ -143,6 +110,11 @@ def app():
 
     # User input
     if prompt := st.chat_input('Your message here...'):
+        # Set the chat_id based on the prompt if it doesn't exist
+        if st.session_state.get('chat_id') is None:
+            st.session_state.chat_id = hashlib.sha256(prompt.encode()).hexdigest()
+            st.session_state.chat_title = prompt
+
         if st.session_state.chat_id not in past_chats.keys():
             past_chats[st.session_state.chat_id] = st.session_state.chat_title
             joblib.dump(past_chats, os.path.join(DATA_DIR, 'past_chats_list'))
@@ -156,8 +128,12 @@ def app():
             )
         )
 
-        # Generate response
-        response = user_input(prompt, st.session_state.gemini_history)
+        # Show a spinner with alternating messages while generating the response
+        # = ["Whats a lawyers favorite drink? Subpoeña coladas ", "Remember this isn't legal advice always consult a lawyer, like Better Call Saul", "Nick is an amazing professor"]
+        with st.spinner(random.choice(spinner_messages)):
+            # Generate response
+            response = user_input(prompt, st.session_state.gemini_history)
+
         with st.chat_message(
             name=MODEL_ROLE,
             avatar=AI_AVATAR_ICON,
@@ -185,68 +161,64 @@ def app():
             f'{DATA_DIR}/{st.session_state.chat_id}-gemini_messages',
         )
 
+    # Sidebar for potential questions
+    with st.sidebar:
+        st.write("## Potential Questions")
+        potential_questions = [
+            "What is the difference between GDPR and the EU AI Act?",
+            "What sensitive data is mentioned in GDPR?",
+            "If I am building a machine learning model that uses information about a user, is that GDPR compliant?",
+            "Where is the EU AI Act enforced?",
+            "Can I collect users social security information of the california privacy act?",
+        ]
+        for question in potential_questions:
+            if st.button(question):
+                st.session_state['auto_filled'] = question
 
-        # # Sidebar for document processing
-        # with st.sidebar:
-        #     st.write("# Code Compliance:")
-        #     url = st.text_area("Enter your Github Url here:")
-        #     code = get_github_repo_contents(url)
-        #     print("code type", code)
+    # Automatically fill the chat input with a question from the sidebar
+    if 'auto_filled' in st.session_state:
+        prompt = st.session_state.pop('auto_filled')
+        with st.chat_message('user'):
+            st.markdown(prompt)
+        st.session_state.messages.append(
+            dict(
+                role='user',
+                content=prompt,
+            )
+        )
 
-        #     st.header("Compliance Regulations")
-        #     if st.button("HIPA"):
-        #         st.write("Optimizing for HIPAA Answers...")
-        #     if st.button("GDPR"):
-        #         st.write("Optimizing for General Data Protection Regulation (GDPR) Answers...")
-        #     if st.button("EU AI Act"):
-        #         st.write("Optimizing for EU AI Act compliance Answers...")
+        # Show a spinner with alternating messages while generating the response
+        #spinner_messages = ["Whats a lawyers favorite drink? Subpoeña coladas ", "Remember this isn't legal advice always consult a lawyer, like Better Call Saul", "Nick is an amazing professor"]
+        with st.spinner(random.choice(spinner_messages)):
+            # Generate response
+            response = user_input(prompt, st.session_state.gemini_history)
 
+        with st.chat_message(
+            name=MODEL_ROLE,
+            avatar=AI_AVATAR_ICON,
+        ):
+            st.markdown(response)
 
-# """             if st.button("Submit & Process Code"):
-#                 with st.spinner("Processing Code..."):
-#                     context = code
+        st.session_state.messages.append(
+            dict(
+                role=MODEL_ROLE,
+                content=response,
+                avatar=AI_AVATAR_ICON,
+            )
+        )
 
-#                     compliance_report = check_code_compliance(context)
+        st.session_state.gemini_history.append({"role": "user", "parts": [{"text": prompt}]})
+        st.session_state.gemini_history.append({"role": MODEL_ROLE, "parts": [{"text": response}]})
 
-#                     with st.chat_message(
-#                         name=MODEL_ROLE,
-#                         avatar=AI_AVATAR_ICON,
-#                     ):
-#                         st.markdown(compliance_report)
+        # Save chat history
+        joblib.dump(
+            st.session_state.messages,
+            f'{DATA_DIR}/{st.session_state.chat_id}-st_messages',
+        )
+        joblib.dump(
+            st.session_state.gemini_history,
+            f'{DATA_DIR}/{st.session_state.chat_id}-gemini_messages',
+        )
 
-#                     st.session_state.messages.append(
-#                         dict(
-#                             role=MODEL_ROLE,
-#                             content=compliance_report,
-#                             avatar=AI_AVATAR_ICON,
-#                         )
-#                     )
-
-#                     st.session_state.gemini_history.append({"role": "user", "parts": [{"text": context}]})
-#                     st.session_state.gemini_history.append({"role": MODEL_ROLE, "parts": [{"text": compliance_report}]})
-
-#                     # Save chat history after processing the code input
-#                     joblib.dump(
-#                         st.session_state.messages,
-#                         f'{DATA_DIR}/{st.session_state.chat_id}-st_messages',
-#                     )
-#                     joblib.dump(
-#                         st.session_state.gemini_history,
-#                         f'{DATA_DIR}/{st.session_state.chat_id}-gemini_messages',
-#                     )
-#                     st.success("Code processed")
-#     elif page == "Questionnaire":
-#         # The pickle files saved will have the information, query into the pickle file to get the responses from the user
-#         response_code_object = questionnaire()
-
-#         # Load responses and run compliance check if responses exist
-#         if response_code_object != None:
-#             print(response_code_object) #passes in a dictionary
-#             project_compliance_checker = CodeProject(response_code_object)
-#             pia_question = "Please give any generated, observed, derived or inferred data processed by this project about a user?"
-#             answer_pia_question = answer_pia_questions_individually(project_compliance_checker, pia_question)
-#             print(answer_pia_question)
-#             st.write("**Compliance Report:**")
-#             st.markdown(compliance_report) """
-
-app()
+if __name__ == "__main__":
+    main()

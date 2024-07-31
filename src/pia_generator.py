@@ -290,6 +290,8 @@ def generate_pia_answers(pia_template, data_code):
             FOR EACH SECTION MENTION THE DATA USED AND CODE PER SECTION 
             Look at the way the data is being used.
 
+            Generate a table and classify the data used 
+
             If it is possible to identify a user based off the data , then that is a compliance risk and should be mentioned throughout the PIA template. 
 
             Mention if there is any hashing or P1 or P2 level data used
@@ -304,6 +306,8 @@ def generate_pia_answers(pia_template, data_code):
             The output should be a 9 section document about a PIA given the code requirements. 
              
             Show the developer how to improve the software project so that is has less privacy risks 
+
+
 
              """
 

@@ -78,16 +78,7 @@ def user_input(user_question: str, history: List[dict]):
         max_retries=2
     )
  
-    #chain = get_conversational_chain()
     qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever= compression_retriever, chain_type_kwargs={"prompt": prompt})
     result = qa_chain({"query": user_question})
 
-    #response = chain.invoke(user_question)
-
-    #response = chain(
-    #    {"input_documents": docs, "question": user_question, "history": history},
-    #    return_only_outputs=True
-    #)
-    #print("fuck yea")
-    #print(response)
     return result["result"]
