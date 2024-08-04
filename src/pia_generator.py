@@ -21,11 +21,15 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains import create_retrieval_chain
 import joblib
 from dotenv import dotenv_values
+from dotenv import load_dotenv
+
+load_dotenv("/Users/aashaiavadhani/Desktop/Karna2.0/src/.env")
 
 
 config = dotenv_values(".env")  # config = {"USER": "foo", "EMAIL": "foo@example.org"}
 
 DATA_DIR = 'data/'
+
 
 os.environ["ANTHROPIC_API_KEY"] = os.environ.get("ANTHROPIC_API_KEY")
 client_anthropic = anthropic.Anthropic(

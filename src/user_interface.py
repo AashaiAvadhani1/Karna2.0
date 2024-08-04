@@ -16,12 +16,14 @@ from langchain_anthropic import ChatAnthropic
 from langchain_google_vertexai import VertexAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain import hub
+from dotenv import load_dotenv
 
-print(os.environ.get("ANTHROPIC_API_KEY"))
+load_dotenv("/Users/aashaiavadhani/Desktop/Karna2.0/src/.env")
+
+
 os.environ["ANTHROPIC_API_KEY"] = os.environ.get("ANTHROPIC_API_KEY")
 
 def user_input(user_question: str, history: List[dict]):
-    print(os.environ.get("ANTHROPIC_API_KEY"))
 
     embeddings4 = HuggingFaceEmbeddings(model_name='LaBSE')
 
