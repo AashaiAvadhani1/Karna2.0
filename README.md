@@ -68,8 +68,6 @@ Our dedicated team of AI researchers, legal experts, and software engineers coll
 - **Nakul Vadlamudi:** Data Scientist
 - **Tyler Sapsford:** Data Scientist
 
-Contact details for our team members can be found in the `team` directory.
-
 ---
 
 We believe Karna will revolutionize compliance checking in software development and data science, providing valuable support to data scientists and developers, and lightening the load for legal professionals as well as programmers. For detailed documentation and to start using Karna, please refer to the resources available in this repository.
