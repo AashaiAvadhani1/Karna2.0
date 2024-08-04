@@ -168,7 +168,7 @@ def main():
             "What is the difference between GDPR and the EU AI Act?",
             "What sensitive data is mentioned in GDPR?",
             "If I am building a machine learning model that uses information about a user, is that GDPR compliant?",
-            "Where is the EU AI Act enforced?",
+            "If I use a person’s last name within my analysis, is that in compliance with HIPAA?",
             "Can I collect users social security information of the california privacy act?",
         ]
         for question in potential_questions:

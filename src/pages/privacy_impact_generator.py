@@ -5,13 +5,24 @@ import requests
 from dotenv import load_dotenv
 import google.generativeai as genai
 import time
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+import nbformat
 
 import sys
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..')))
 
 from src.pia_generator import *
 from src.code_class import *
-import nbformat
+
+# Load environment variables
+load_dotenv()
+
+# Email configuration
+EMAIL_ADDRESS = "aashai123@gmail.com"
+EMAIL_PASSWORD = "hersheyThunder35?"
+LEGAL_COUNSEL_EMAIL = "aavadhani@uchicago.edu"
 
 def extract_code_cells(notebook_content):
     """Extracts only the code cells from a Jupyter notebook, excluding those with multimedia content."""
@@ -67,6 +78,19 @@ def get_github_repo_contents(repo_url):
 
     return fetch_contents(api_url, code_file_extensions)
 
+def send_email(subject, body, recipient):
+    """Sends an email with the specified subject and body to the recipient."""
+    msg = MIMEMultipart()
+    msg['From'] = EMAIL_ADDRESS
+    msg['To'] = recipient
+    msg['Subject'] = subject
+    msg.attach(MIMEText(body, 'plain'))
+    
+    with smtplib.SMTP('smtp.gmail.com', 587) as server:
+        server.starttls()
+        server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
+        server.send_message(msg)
+
 def main():
     st.title("Privacy Impact Assessment")
     st.write("""Generate a PIA in less than 5 minutes!
@@ -90,10 +114,13 @@ def main():
     
     if st.sidebar.button("Generate Privacy Impact Assessment"):
         if code:
-            with st.spinner("Did you know it costs a company on average $3,000 to create a PIA"):
+            with st.spinner("Did you know it costs a company on average $30,000 to create a PIA"):
                 time.sleep(5)
                 pia_output = generate_pia(code)
                 st.write(pia_output)
+                if st.button("Send to Legal Counsel"):
+                    send_email("Generated Privacy Impact Assessment", pia_output, LEGAL_COUNSEL_EMAIL)
+                    st.success("PIA sent to legal counsel.")
         else:
             st.sidebar.warning("Please enter a valid GitHub URL or input your code directly.")
 

@@ -29,9 +29,10 @@ from mistralai.models.chat_completion import ChatMessage
 #from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 #from langchain_core.runnables.history import RunnableWithMessageHistory
 
+#print(os.environ.get("ANTHROPIC_API_KEY"))
 client_anthropic = anthropic.Anthropic(
     # defaults to os.environ.get("ANTHROPIC_API_KEY")
-    api_key= "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",
+    api_key= os.environ.get("ANTHROPIC_API_KEY"),
 )
 
 mistral_model = ChatMistralAI(mistral_api_key= os.environ.get("MISTRAL_API_KEY"), temperature = 0.5)

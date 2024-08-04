@@ -17,11 +17,12 @@ from langchain_google_vertexai import VertexAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain import hub
 
-"""
-Re-ranking llama index and cohere part 
-"""
+print(os.environ.get("ANTHROPIC_API_KEY"))
+os.environ["ANTHROPIC_API_KEY"] = os.environ.get("ANTHROPIC_API_KEY")
 
 def user_input(user_question: str, history: List[dict]):
+    print(os.environ.get("ANTHROPIC_API_KEY"))
+
     embeddings4 = HuggingFaceEmbeddings(model_name='LaBSE')
 
     file_to_faiss = "/Users/aashaiavadhani/Desktop/Karna2.0/src/faiss_index"
@@ -40,7 +41,6 @@ def user_input(user_question: str, history: List[dict]):
     prompt = hub.pull("aavadhan/karnabot", api_url="https://api.hub.langchain.com")
     
     #prompt = hub.pull("rlm/rag-prompt", api_url="https://api.hub.langchain.com")
-    print(prompt)
     role =  """
                 Your task is to address relevant questions related to privacy and compliance regulation texts. Adapt your responses to match the style and needs of each question, avoiding unnecessary technical jargon and explaining in simple terms. Do not include information that is unnecessary or irrelevant to the question.
 
@@ -75,7 +75,8 @@ def user_input(user_question: str, history: List[dict]):
         temperature=0.2,
         max_tokens=1024,
         timeout=None,
-        max_retries=2
+        max_retries=2,
+        top_p = 0.4
     )
  
     qa_chain = RetrievalQA.from_chain_type(llm=llm, retriever= compression_retriever, chain_type_kwargs={"prompt": prompt})

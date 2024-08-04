@@ -27,10 +27,10 @@ config = dotenv_values(".env")  # config = {"USER": "foo", "EMAIL": "foo@example
 
 DATA_DIR = 'data/'
 
-
+os.environ["ANTHROPIC_API_KEY"] = os.environ.get("ANTHROPIC_API_KEY")
 client_anthropic = anthropic.Anthropic(
     # defaults to os.environ.get("ANTHROPIC_API_KEY")
-    api_key= "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",
+    api_key= os.environ.get("ANTHROPIC_API_KEY"),
 )
 
 
@@ -164,7 +164,7 @@ List all the data mentioned step by step including variable names, the correspon
     
     """
     message = client_anthropic.messages.create(
-        model="claude-3-opus-20240229",
+        model="claude-3-sonnet-20240229",
         max_tokens=4096,
         temperature=0.2,
         system= system_prompt,
@@ -316,7 +316,7 @@ def generate_pia_answers(pia_template, data_code):
 
 
     message = client_anthropic.messages.create(
-        model="claude-3-opus-20240229",
+        model="claude-3-sonnet-20240229",
         max_tokens=4096,
         temperature=0.1,
         system= decider_prompt,
