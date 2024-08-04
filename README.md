@@ -1,8 +1,8 @@
 # Karna: A Compliance Checking Chatbot for Code Analysis
 
 ## **Table of Contents**
-1. **Motivation**
-2. **Market Opportunity**
+1. **Market Opportunity**
+2. **Motivation**
 3. **Introducing Karna**
 4. **Data Background**
 5. **Model Training**
@@ -12,9 +12,16 @@
 9. **Key Risks and Future Work**
 10. **Meet the Team!**
 
+## **Motivation**
+
+Compliance is hard. Compliance Assessments take too much time to complete. Karna reads code and develops compliance assessments using AI.
+
+The motivation behind Karna is to empower data scientists and software engineers by providing them with a robust tool that eliminates the need to consult legal experts for every privacy-related query within their code. Navigating the complexities of privacy legislation like GDPR, CCPA, HIPAA, and the Privacy Act of 1974 can be daunting and time-consuming. Traditionally, ensuring compliance requires frequent interactions with legal professionals, which can slow down development processes and increase costs. Karna addresses this challenge by offering an AI-driven solution that provides instant access to comprehensive legal insights and compliance checks. This allows developers to seamlessly integrate privacy considerations into their workflows, ensuring their code meets regulatory standards without the constant need for legal intervention. By streamlining the compliance process, Karna enables developers to focus more on innovation and less on legal complexities, ultimately accelerating the development of privacy-compliant software solutions, without worrying about global compliance barriers. 
+
+[![logo.png](https://i.postimg.cc/9QLxftyF/logo.png)](https://postimg.cc/0zJGWStL)
+
 ## **Market Opportunity**
 
-Automated Compliance Assessments.
 
 The data governance and privacy market has become increasingly important as organizations seek to comply with regulations, protect sensitive information, and gain competitive advantages through effective data management. This market intersects with competition law, as data protection and competition authorities apply different frameworks and pursue different policy objectives.
 
@@ -23,10 +30,6 @@ Liminal projects a TAM of $65 billion in 2027 for oveall compliance, with an exp
 Mordor Intelligence estimates the Data Governance Market size at $3.27 billion in 2024, projected to reach $8.03 billion by 2029, growing at a CAGR of 19.72%.
 A more optimistic projection suggests the Data Governance Market could hit $13.92 billion by 2031.
 
-## **Motivation**
-The motivation behind Karna is to empower data scientists and software engineers by providing them with a robust tool that eliminates the need to consult legal experts for every privacy-related query within their code. Navigating the complexities of privacy legislation like GDPR, CCPA, HIPAA, and the Privacy Act of 1974 can be daunting and time-consuming. Traditionally, ensuring compliance requires frequent interactions with legal professionals, which can slow down development processes and increase costs. Karna addresses this challenge by offering an AI-driven solution that provides instant access to comprehensive legal insights and compliance checks. This allows developers to seamlessly integrate privacy considerations into their workflows, ensuring their code meets regulatory standards without the constant need for legal intervention. By streamlining the compliance process, Karna enables developers to focus more on innovation and less on legal complexities, ultimately accelerating the development of privacy-compliant software solutions, without worrying about global compliance barriers. 
-
-[![logo.png](https://i.postimg.cc/9QLxftyF/logo.png)](https://postimg.cc/0zJGWStL)
 
 ## **Introducing Karna**
 Karna is a cutting-edge GenAI solution tailored for data scientists and software engineers to ensure their code adheres to key privacy legislation, including GDPR (E.U. General Data Protection Regulation), CCPA (California Consumer Privacy Act), HIPAA (Health Insurance Portability and Accountability Act), and the Privacy Act of 1974. This innovative application features an intuitive chatbot, enabling users to ask detailed questions about the entirety of these legal documents. Additionally, Karna provides powerful tools to analyze and verify your code's compliance with specific laws, ensuring your projects meet all necessary regulatory standards. By leveraging Karna, you can streamline your compliance processes, reduce legal risks, and focus on building high-quality, privacy-compliant software.
