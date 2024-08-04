@@ -55,12 +55,6 @@ with col4:
 if "my_input" not in st.session_state:
     st.session_state["my_input"] = ""
 
-#my_input = st.text_input("Input a text here", st.session_state["my_input"])
-#submit = st.button("Submit")
-#if submit:
-#    st.session_state["my_input"] = my_input
-#    st.write("You have entered: ", my_input)
-
 # Compliance issues overview
 st.header("Compliance Issues Overview")
 
@@ -71,3 +65,22 @@ compliance_data = pd.DataFrame({
 })
 
 st.table(compliance_data)
+
+# Section for using sensitive data and reasons
+st.header("Using Sensitive Data and Reasons")
+
+# GDPR Box
+st.subheader("GDPR")
+st.info("Reason: Inappropriate data handling practices in violation of Article 5(1)(b) - data not collected for specified, explicit, and legitimate purposes.")
+
+# EU AI Act Box
+st.subheader("EU AI Act")
+st.info("Reason: Non-compliance with Article 10 - failure to ensure transparency and accountability in AI system deployment, leading to misuse of personal data.")
+
+# HIPAA Box
+st.subheader("HIPAA")
+st.info("Reason: Unauthorized access to patient records, violating the Privacy Rule, specifically 45 CFR §164.502 - impermissible uses and disclosures of Protected Health Information (PHI).")
+
+# CCPA Box
+st.subheader("CCPA")
+st.info("Reason: Failure to provide consumers with the right to opt-out of the sale of their personal information, as stipulated in Section 1798.120 of the CCPA.")
