@@ -8,3 +8,5 @@ faiss-cpu
 langchain-google-genai
 langchain-cohere
 streamlit_option_menu
+langchain-community
+langchain-anthropic

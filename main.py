@@ -256,11 +256,9 @@ def main():
 
         # Load responses and run compliance check if responses exist
         if response_code_object != None:
-            print(response_code_object) #passes in a dictionary
             project_compliance_checker = CodeProject(response_code_object)
             pia_question = "Please give any generated, observed, derived or inferred data processed by this project about a user?"
             answer_pia_question = answer_pia_questions_individually(project_compliance_checker, pia_question)
-            print(answer_pia_question)
             st.write("**Compliance Report:**")
             st.markdown(compliance_report)
 

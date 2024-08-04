@@ -14,12 +14,12 @@
 
 ## **Market Opportunity**
 
-Vanta, OneTrust have created a new category of privacy automation.
+Automated Compliance Assessments.
 
 The data governance and privacy market has become increasingly important as organizations seek to comply with regulations, protect sensitive information, and gain competitive advantages through effective data management. This market intersects with competition law, as data protection and competition authorities apply different frameworks and pursue different policy objectives.
 
 The data governance and privacy market is experiencing significant growth, with various projections for its total addressable market:
-Liminal projects a TAM of $2.2 billion in 2024 for privacy and consent management, with an expected compound annual growth rate (CAGR) of 19.3%, reaching $5.4 billion by 2028.
+Liminal projects a TAM of $65 billion in 2027 for oveall compliance, with an expected compound annual growth rate (CAGR) of 19.3%.
 Mordor Intelligence estimates the Data Governance Market size at $3.27 billion in 2024, projected to reach $8.03 billion by 2029, growing at a CAGR of 19.72%.
 A more optimistic projection suggests the Data Governance Market could hit $13.92 billion by 2031.
 
@@ -74,37 +74,3 @@ We believe Karna will revolutionize compliance checking in software development 
 
 #### RAG pipeline using LangChain, Gemini pro, Faiss, Mistral, Anthropic
 This is Karna, the first ever automated Privacy Risk Assessment Tool that reads code and understands privacy risks to your company. 
-
-
-#### Local Installation
-Prerequisites
-- Python 3.11
-- Poetry
-
-#### Installing Poetry
-If you haven't already installed Poetry in your machine, you can do so by following the instructions on the [official Poetry website](https://python-poetry.org/docs/). (Or you can enter 'pip install poetry' inside terminal)
-
-```
-2. Install Dependencies
-
-Using Poetry, you can install all the dependencies defined in the pyproject.toml file.
-
-```bash
-poetry install
-```
-3. Add Gemni Pro API
-
-Get your [Gemini Pro API key](https://makersuite.google.com/app/apikey) 
-
-Create a `.env` file in the project root folder and add the API key like below (add yours, the following won't work):
-```bash
-GOOGLE_API_KEY = "Type_Your_Key_Here"
-```
-
-#### Run the app
-
-From the project root directory, run the following command: 
-```
-streamlit run app.py
-```
-The app will open in your browser.
